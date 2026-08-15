@@ -1,5 +1,22 @@
 {
-  "generated_at": "2026-08-15T22:24:04.792388Z",
+  "generated_at": "2026-08-15T22:26:13.711671Z",
   "weeks": 12,
-  "listings": []
+  "listings": [
+    {
+      "status": "error",
+      "error": "Não encontrei dados de calendário na página. O layout do Airbnb pode ter mudado, ou o acesso automatizado foi bloqueado.",
+      "id": "l_msuy19h5",
+      "url": "https://www.airbnb.com.br/rooms/1082099185665718159",
+      "nickname": "azul",
+      "updated_at": "2026-08-15T22:26:05.070556Z"
+    },
+    {
+      "status": "error",
+      "error": "Não encontrei dados de calendário na página. O layout do Airbnb pode ter mudado, ou o acesso automatizado foi bloqueado.",
+      "id": "l_msuy2mdm",
+      "url": "https://www.airbnb.com.br/rooms/1724224677075189692",
+      "nickname": "14min",
+      "updated_at": "2026-08-15T22:26:09.711541Z"
+    }
+  ]
 }
