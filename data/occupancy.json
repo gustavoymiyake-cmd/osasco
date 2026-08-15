@@ -1,5 +1,14 @@
 {
-  "generated_at": "2026-08-15T22:39:33.663025Z",
+  "generated_at": "2026-08-15T22:42:06.709736Z",
   "weeks": 12,
-  "listings": []
+  "listings": [
+    {
+      "status": "error",
+      "error": "O acesso parece ter sido bloqueado por um sistema anti-bot (captcha/verificação). HTML salvo em debug/ para conferência.",
+      "id": "l_msuymivx",
+      "url": "https://www.airbnb.com.br/rooms/1082099185665718159",
+      "nickname": "azul",
+      "updated_at": "2026-08-15T22:42:02.709597Z"
+    }
+  ]
 }
