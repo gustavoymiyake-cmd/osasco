@@ -27,6 +27,15 @@ jobs:
       - name: Buscar disponibilidade dos anúncios
         run: python scripts/fetch_availability.py
 
+      - name: Upload do HTML de depuração (se houve falha em algum anúncio)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-html
+          path: debug/
+          if-no-files-found: ignore
+          retention-days: 3
+
       - name: Commit e push dos dados atualizados
         run: |
           git config user.name "github-actions[bot]"
