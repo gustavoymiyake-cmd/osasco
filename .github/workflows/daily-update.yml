@@ -1,9 +1,16 @@
-name: Atualização diária de ocupação
+name: Atualização de ocupação (manual / referência)
 
+# O agendamento automático (cron) foi removido daqui: o Airbnb bloqueia os
+# IPs de datacenter usados pelos runners do GitHub Actions (ver seção
+# "Por que rodar localmente" no README). A atualização diária agora roda no
+# seu computador via scripts/run_local.sh (Mac/Linux) ou
+# scripts/run_local.ps1 (Windows), agendado por cron ou Task Scheduler.
+#
+# Este workflow fica só como atalho manual (Actions → Run workflow) para o
+# caso de você configurar um runner self-hosted no futuro — rodando em um
+# runner hospedado pelo GitHub, é bem provável que dê o mesmo erro de
+# bloqueio anti-bot.
 on:
-  schedule:
-    # 06:00 UTC = 03:00 no horário de Brasília (UTC-3). Ajuste se preferir outro horário.
-    - cron: "0 6 * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -36,7 +43,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 3
 
-      - name: Commit e push dos dados atualizados
+      - name: Commit e push dos dados atualizados (se rodado manualmente)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
