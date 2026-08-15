@@ -276,7 +276,7 @@
 <div class="overlay" id="overlay-settings" hidden>
   <div class="modal">
     <h2>Configurações</h2>
-    <p class="hint">Este portal é um site estático — para adicionar/remover imóveis ou forçar uma atualização, ele grava direto no seu repositório GitHub usando um token de acesso pessoal (fine-grained), salvo apenas neste navegador (localStorage), nunca enviado a mais ninguém.</p>
+    <p class="hint">Este portal é um site estático — para adicionar/remover imóveis, ele grava direto no seu repositório GitHub usando um token de acesso pessoal (fine-grained), salvo apenas neste navegador (localStorage), nunca enviado a mais ninguém. A busca diária de disponibilidade roda no seu computador (agendada por cron/Task Scheduler), não pelo GitHub Actions — veja o README.</p>
     <div class="field">
       <label for="input-owner">Usuário/organização do GitHub</label>
       <input type="text" id="input-owner" placeholder="seu-usuario">
@@ -293,8 +293,13 @@
       <label for="input-token">Token de acesso pessoal (permissão: Contents + Actions, apenas neste repositório)</label>
       <input type="password" id="input-token" placeholder="github_pat_...">
     </div>
+    <div class="field" style="background: var(--ink); border: 1px solid var(--line); border-radius: 7px; padding: 12px 14px;">
+      <label style="margin-bottom: 8px;">Para atualizar na hora, rode no seu computador:</label>
+      <code style="display:block; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--teal); word-break: break-all;">bash scripts/run_local.sh</code>
+      <div style="font-size: 11px; color: var(--text-faint); margin-top: 6px;">(Windows: <code>powershell -File scripts\run_local.ps1</code>)</div>
+    </div>
     <div class="modal-actions" style="justify-content: space-between;">
-      <button class="btn-ghost btn-danger" id="btn-force-run">Forçar atualização agora</button>
+      <button class="btn-ghost btn-danger" id="btn-force-run" title="Só funciona se você configurar um runner self-hosted; em runner do GitHub, provavelmente vai bloquear igual ao scraper.">Tentar via GitHub Actions (avançado)</button>
       <div style="display:flex; gap:10px;">
         <button class="btn-ghost" id="btn-settings-cancel">Fechar</button>
         <button class="btn-primary" id="btn-settings-save">Salvar</button>
