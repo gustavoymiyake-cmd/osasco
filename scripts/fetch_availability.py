@@ -42,6 +42,38 @@ DELAY_BETWEEN_REQUESTS_SEC = 4  # evita bater rápido demais no servidor do Airb
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LISTINGS_PATH = os.path.join(BASE_DIR, "listings.json")
 OUTPUT_PATH = os.path.join(BASE_DIR, "data", "occupancy.json")
+DEBUG_DIR = os.path.join(BASE_DIR, "debug")
+
+BOT_BLOCK_SIGNS = [
+    "just a moment",
+    "cf-browser-verification",
+    "captcha",
+    "px-captcha",
+    "datadome",
+    "attention required",
+    "unusual traffic from your computer",
+    "access to this page has been denied",
+    "please verify you are a human",
+    "verifique que você é humano",
+]
+
+
+def looks_blocked(html_text: str) -> bool:
+    lowered = html_text.lower()
+    return any(sign in lowered for sign in BOT_BLOCK_SIGNS)
+
+
+def save_debug_html(listing_id: str, html_text: str):
+    """Salva o HTML bruto recebido para permitir depuração manual depois."""
+    try:
+        os.makedirs(DEBUG_DIR, exist_ok=True)
+        ts = datetime.datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+        path = os.path.join(DEBUG_DIR, f"{listing_id or 'unknown'}_{ts}.html")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(html_text)
+        print(f"  HTML de depuração salvo em: {path}")
+    except OSError as e:
+        print(f"  não consegui salvar HTML de depuração: {e}")
 
 
 def extract_listing_id(url: str):
@@ -77,9 +109,13 @@ def fetch_listing_availability(url: str):
         return {"status": "error", "error": f"Falha na requisição: {e}"}
 
     if resp.status_code != 200:
+        save_debug_html(listing_id, resp.text)
         return {
             "status": "error",
-            "error": f"HTTP {resp.status_code} ao acessar o anúncio (pode ser bloqueio anti-bot).",
+            "error": (
+                f"HTTP {resp.status_code} ao acessar o anúncio (pode ser bloqueio "
+                "anti-bot). HTML salvo em debug/ para conferência."
+            ),
         }
 
     soup = BeautifulSoup(resp.text, "html.parser")
@@ -95,13 +131,20 @@ def fetch_listing_availability(url: str):
         find_calendar_days(data, days_found)
 
     if not days_found:
-        return {
-            "status": "error",
-            "error": (
+        save_debug_html(listing_id, resp.text)
+        if looks_blocked(resp.text):
+            error_msg = (
+                "O acesso parece ter sido bloqueado por um sistema anti-bot "
+                "(captcha/verificação). HTML salvo em debug/ para conferência."
+            )
+        else:
+            error_msg = (
                 "Não encontrei dados de calendário na página. O layout do "
-                "Airbnb pode ter mudado, ou o acesso automatizado foi bloqueado."
-            ),
-        }
+                "Airbnb pode ter mudado, ou os dados agora só carregam via "
+                "JavaScript no navegador (não vêm no HTML inicial). HTML salvo "
+                "em debug/ para conferência."
+            )
+        return {"status": "error", "error": error_msg}
 
     by_date = {}
     for d in days_found:
