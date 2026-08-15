@@ -61,10 +61,21 @@ tokens → Fine-grained tokens → Generate new token**:
   (só é necessário se quiser usar o botão "Forçar atualização agora").
 - Copie o token gerado (começa com `github_pat_...`).
 
-No painel, clique em **Configurações**, preencha usuário, nome do
-repositório, branch (`main`) e cole o token. Ele fica salvo **só no seu
-navegador** (localStorage) — nunca é enviado para nenhum servidor além da
-API do próprio GitHub.
+Abra o painel publicado (`https://SEU-USUARIO.github.io/SEU-REPO/`) e
+clique no botão **"Configurações"** no canto superior direito. Vai abrir
+uma janela com quatro campos — preencha cada um assim:
+
+| Campo no painel | O que colocar |
+|---|---|
+| Usuário/organização do GitHub | seu usuário do GitHub (ex: `joaosilva`) |
+| Nome do repositório | o nome que você deu ao repositório (ex: `airbnb-occupancy-tracker`) |
+| Branch | `main` (ou o nome da branch que você usou no passo 1) |
+| Token de acesso pessoal | o token `github_pat_...` gerado no passo 4 |
+
+Depois clique em **"Salvar"**. Os valores ficam guardados **só no seu
+navegador** (localStorage) — nunca são enviados para nenhum servidor além
+da API do próprio GitHub. Se você abrir o painel em outro navegador ou
+computador, vai precisar preencher esses campos de novo lá também.
 
 ### 5. Adicionar imóveis
 Clique em **"+ Adicionar imóvel"**, cole o link do anúncio (ex:
@@ -90,6 +101,25 @@ dias reservados ÷ dias com dado conhecido
 
 Dias sem informação de calendário (fora do alcance que o Airbnb expõe, por
 exemplo) não entram na conta.
+
+## Quando um anúncio dá erro ("Não encontrei dados de calendário...")
+
+O Airbnb muda o layout das páginas com frequência, então isso pode
+acontecer. Toda vez que a leitura de um anúncio falha, o script salva o
+HTML bruto recebido em `debug/` e o workflow publica esse conteúdo como um
+**artefato** do run (não fica commitado no repositório):
+
+1. No GitHub, vá em **Actions** → abra o run mais recente do workflow
+   "Atualização diária de ocupação".
+2. Role até o final da página do run e baixe o artefato **debug-html**.
+3. Abra o arquivo `.html` de dentro do zip.
+
+Esse arquivo mostra exatamente o que o script recebeu do Airbnb — se for
+uma página de captcha/verificação (bloqueio anti-bot) ou uma página normal
+mas sem os dados de calendário embutidos (layout mudou, ou os dados agora
+só carregam via JavaScript no navegador). Nesses dois casos o ajuste do
+parser precisa ser feito olhando o HTML real, então vale enviar esse
+arquivo (ou trechos dele) para quem for dar manutenção no script.
 
 ## Rodando localmente para testar o scraper
 
